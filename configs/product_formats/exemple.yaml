@@ -1,0 +1,221 @@
+# Configuration du Format de Sortie (Exemple)
+# Ce fichier définit la structure des données que l'IA doit générer après traitement.
+
+format_version: "1.1"
+target_entity: "product"
+description: "Configuration avancée pour export Prestashop"
+
+# Options globales de traitement
+processing:
+  clean_html: true
+  translate_to: "fr"
+  currency: "EUR"
+
+# Définition des champs de sortie
+fields:
+  # --- Généralités ---
+  - name: "id_shop_default"
+    type: "integer"
+    default: 1
+    const: true # Force la valeur, l'IA ne doit pas la deviner
+    description: "Identifiant boutique par défaut"
+
+  - name: "ean13"
+    type: "string"
+    description: "Code barre EAN13"
+    validation:
+      pattern: "^\\d{13}$"
+      message: "L'EAN doit comporter exactement 13 chiffres"
+    required: false
+
+  - name: "reference"
+    type: "string"
+    description: "Référence interne"
+    transform: ["uppercase", "trim"] # Post-traitement automatique
+
+  - name: "supplier_reference"
+    type: "string"
+    description: "Référence fournisseur"
+    ai_instruction: "Cherche la référence spécifiquement dans l'en-tête ou près du logo fournisseur"
+
+  - name: "name"
+    type: "string"
+    description: "Nom du produit"
+    required: true
+    validation:
+      max_length: 128
+
+  - name: "link_rewrite"
+    type: "string"
+    description: "URL rewritée (slug)"
+    transform: ["slugify"] # Transforme "Nom du Produit" en "nom-du-produit"
+    ai_instruction: "Génère le slug à partir du nom si vide"
+
+  - name: "description_short"
+    type: "html"
+    description: "Description courte pour les listes"
+    ai_instruction: "Génère un résumé marketing de 2 phrases maximum, accrocheur"
+
+  - name: "description"
+    type: "html"
+    description: "Description détaillée du produit"
+    transform: ["clean_html_tags"]
+
+  # --- SEO (Généré par IA si absent) ---
+  - name: "meta_title"
+    type: "string"
+    description: "Titre pour le SEO"
+    ai_instruction: "Génère un titre SEO optimisé de moins de 70 caractères si non présent"
+    # Pas besoin de exclude_from_extraction: true, c'est automatique avec ai_instruction !
+
+  - name: "meta_description"
+    type: "string"
+    description: "Description pour le SEO"
+    validation:
+      max_length: 160
+    ai_instruction: "Génère une description SEO attractive de moins de 160 caractères"
+
+  # --- Technique ---
+  - name: "dimensions"
+    type: "object"
+    description: "Dimensions physiques du produit"
+    fields:
+      - name: "width"
+        type: "float"
+        unit: "cm"
+        validation: { min: 0 }
+      - name: "height"
+        type: "float"
+        unit: "cm"
+        validation: { min: 0 }
+      - name: "depth"
+        type: "float"
+        unit: "cm"
+        validation: { min: 0 }
+      - name: "weight"
+        type: "float"
+        unit: "kg"
+        validation: { min: 0 }
+
+  # --- Visibilité & Disponibilité ---
+  - name: "active"
+    type: "boolean"
+    default: true
+    description: "Produit activé sur le site"
+
+  - name: "available_for_order"
+    type: "boolean"
+    default: true
+    description: "Disponible à la commande"
+
+  - name: "condition"
+    type: "enum"
+    options: ["new", "used", "refurbished"]
+    default: "new"
+    description: "État du produit"
+    mapping: # Mapping valeurs source -> valeurs cible
+      "neuf": "new"
+      "occasion": "used"
+      "reconditionné": "refurbished"
+
+  - name: "visibility"
+    type: "enum"
+    options: ["both", "catalog", "search", "none"]
+    default: "both"
+
+  # --- Financier ---
+  - name: "pricing"
+    type: "object"
+    fields:
+      - name: "wholesale_price"
+        type: "float"
+        description: "Prix d'achat HT"
+      - name: "price"
+        type: "float"
+        description: "Prix de vente HT"
+        ai_instruction: "Si le prix de vente n'est pas indiqué, applique une marge de 30% sur le prix d'achat"
+      - name: "margin"
+        type: "float"
+        description: "Marge commerciale"
+        calculation: "price - wholesale_price" # Champ calculé dynamiquement
+      - name: "id_tax_rules_group"
+        type: "integer"
+        description: "ID du groupe de taxe"
+        default: 1
+      - name: "ecotax"
+        type: "float"
+        description: "Montant de l'écotaxe"
+        default: 0.0
+
+  # --- Conditionnement ---
+  - name: "packaging"
+    type: "object"
+    fields:
+      - name: "unity"
+        type: "string"
+        description: "Unité de vente (ex: L, m, kg)"
+      - name: "unit_price_ratio"
+        type: "float"
+        description: "Ratio prix/unité"
+
+  # --- Segmentation ---
+  - name: "segmentation"
+    type: "object"
+    fields:
+      - name: "id_category_default"
+        type: "integer"
+        description: "Catégorie principale"
+        required: true
+      - name: "family"
+        type: "string"
+        description: "Famille du produit"
+        ai_instruction: "Déduis la famille de produit à partir du nom et de la description"
+
+  # --- Logistique ---
+  - name: "logistics"
+    type: "object"
+    fields:
+      - name: "dispatchable"
+        type: "boolean"
+        default: true
+        description: "Produit expédiable"
+      - name: "follow_letter"
+        type: "boolean"
+        default: false
+        description: "Expédiable en lettre suivie"
+      - name: "minimal_quantity"
+        type: "integer"
+        default: 1
+      - name: "additional_shipping_cost"
+        type: "float"
+        default: 0.0
+
+  # --- Associations ---
+  - name: "associations"
+    type: "object"
+    fields:
+      - name: "id_manufacturer"
+        type: "integer"
+        description: "ID du fabricant"
+      - name: "id_supplier"
+        type: "integer"
+        description: "ID du fournisseur"
+      - name: "categories"
+        type: "array"
+        item_type: "integer"
+        description: "Liste des IDs de catégories"
+
+  # --- Meta IA ---
+  - name: "privatecomment"
+    type: "string"
+    description: "Zone pour noter si généré par IA"
+    default: "Generated by AI"
+    exclude_from_extraction: true  # Ce champ ne sera pas extrait par l'IA
+
+  # --- Exemple de champ généré par IA ---
+  - name: "seo_keywords"
+    type: "array"
+    item_type: "string"
+    description: "Mots-clés SEO générés automatiquement"
+    default: []
+    exclude_from_extraction: true  # Ce champ sera rempli par génération IA séparée

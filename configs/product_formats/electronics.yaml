@@ -1,0 +1,83 @@
+name: "Produit Électronique"
+description: "Format pour les produits électroniques et high-tech"
+
+fields:
+  name:
+    type: string
+    required: true
+    label: "Nom du produit"
+
+  description:
+    type: text
+    required: true
+    label: "Description détaillée"
+
+  price:
+    type: float
+    required: true
+    label: "Prix TTC"
+
+  category:
+    type: string
+    required: true
+    label: "Catégorie"
+
+  reference:
+    type: string
+    required: false
+    label: "Référence / SKU"
+
+  brand:
+    type: string
+    required: false
+    label: "Marque"
+
+  model:
+    type: string
+    required: false
+    label: "Modèle"
+
+  warranty:
+    type: string
+    required: false
+    label: "Garantie"
+
+  specifications:
+    type: json
+    required: false
+    label: "Spécifications techniques"
+
+  features:
+    type: array
+    required: false
+    label: "Caractéristiques principales"
+
+  compatibility:
+    type: text
+    required: false
+    label: "Compatibilité"
+
+  power_supply:
+    type: string
+    required: false
+    label: "Alimentation"
+
+  dimensions:
+    type: json
+    required: false
+    label: "Dimensions (L x l x H)"
+
+  weight:
+    type: float
+    required: false
+    label: "Poids (kg)"
+
+  images:
+    type: array
+    required: false
+    label: "URLs des images"
+
+  manual_url:
+    type: string
+    required: false
+    label: "URL du manuel"
