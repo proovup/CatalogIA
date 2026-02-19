@@ -1,0 +1,207 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "catalogia-generator"
+version = "0.1.0"
+description = "Open-source product catalog generator for e-commerce using AI and document processing"
+readme = "README.md"
+license = {text = "AGPL-3.0"}
+authors = [
+    {name = "Proovup Team", email = "contact@proovup.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "typer>=0.12.0",
+    "fastapi>=0.115.0",
+    "python-multipart>=0.0.9",
+    "uvicorn[standard]>=0.30.0",
+    "sqlalchemy>=2.0.30",
+    "alembic>=1.13.0",
+    "psycopg2-binary>=2.9.9",
+    "redis>=5.0.3",
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.2.0",
+    "pandas>=2.2.1",
+    "openpyxl>=3.1.2",
+    "docling==2.73.1",
+    "PyPDF2>=3.0.1",
+    "pdfplumber>=0.11.0",
+    "python-docx>=1.1.0",
+    "rich>=13.7.1",
+    "click>=8.1.7",
+    "pyyaml>=6.0.1",
+    "jinja2>=3.1.3",
+    "aiofiles>=23.2.1",
+    "httpx>=0.27.0",
+    "streamlit>=1.32.0",
+    "streamlit-extras>=0.4.0",
+    # LangChain ecosystem
+    "langchain>=1.2.6",
+    "langchain-openai>=0.1.0",
+    "langchain-anthropic>=0.1.0",
+    "langchain-community>=0.0.30",
+    "langchain-chroma>=0.1.0",
+    "langsmith>=0.1.0",
+    "chromadb>=0.4.24",
+    "sentence-transformers>=2.6.0",
+    "faiss-cpu>=1.8.0",
+    "langchain-aws>=1.2.1",
+    "langchain-mistralai>=1.1.1",
+    # Scraping
+    "beautifulsoup4>=4.12.0",
+    "lxml>=5.0.0",
+    "ddgs>=6.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.1.0",
+    "black>=24.2.0",
+    "isort>=5.13.0",
+    "flake8>=7.0.0",
+    "mypy>=1.9.0",
+    "pre-commit>=3.6.0",
+    "uv>=0.1.20",
+]
+ai = [
+    "openai>=1.14.0",
+    "anthropic>=0.18.0",
+    "ollama>=0.1.7",
+    "transformers>=4.38.0",
+    "torch>=2.2.1",
+    "accelerate>=0.27.0",
+]
+test = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.1.0",
+    "factory-boy>=3.3.0",
+    "faker>=19.6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/proovup/poc-generator-open-source"
+Repository = "https://github.com/proovup/poc-generator-open-source"
+Documentation = "https://proovup-generator.readthedocs.io"
+Issues = "https://github.com/proovup/poc-generator-open-source/issues"
+
+[project.scripts]
+ecoia = "ecoia.main:cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.black]
+line-length = 120
+target-version = ['py39']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 120
+known_first_party = ["ecoia"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "pandas.*",
+    "openpyxl.*",
+    "PyPDF2.*",
+    "pdfplumber.*",
+    "docx.*",
+    "redis.*",
+    "langchain.*",
+    "langsmith.*",
+    "chromadb.*",
+    "sentence_transformers.*",
+    "faiss.*",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov=src/ecoia",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+source = ["src/ecoia"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/migrations/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]

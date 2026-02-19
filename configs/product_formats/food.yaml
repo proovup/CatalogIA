@@ -1,0 +1,78 @@
+name: "Produit Alimentaire"
+description: "Format pour les produits alimentaires et boissons"
+
+fields:
+  name:
+    type: string
+    required: true
+    label: "Nom du produit"
+
+  description:
+    type: text
+    required: true
+    label: "Description et ingrédients"
+
+  price:
+    type: float
+    required: true
+    label: "Prix TTC"
+
+  category:
+    type: string
+    required: true
+    label: "Catégorie"
+
+  reference:
+    type: string
+    required: false
+    label: "Référence / EAN"
+
+  brand:
+    type: string
+    required: false
+    label: "Marque"
+
+  origin:
+    type: string
+    required: false
+    label: "Origine"
+
+  ingredients:
+    type: text
+    required: false
+    label: "Liste des ingrédients"
+
+  allergens:
+    type: array
+    required: false
+    label: "Allergènes"
+
+  nutritional_info:
+    type: json
+    required: false
+    label: "Informations nutritionnelles"
+
+  storage_conditions:
+    type: text
+    required: false
+    label: "Conditions de conservation"
+
+  expiration_date:
+    type: date
+    required: false
+    label: "Date de péremption"
+
+  weight_or_volume:
+    type: string
+    required: false
+    label: "Poids ou volume"
+
+  certification:
+    type: array
+    required: false
+    label: "Certifications (Bio, Label rouge, etc.)"
+
+  images:
+    type: array
+    required: false
+    label: "URLs des images"

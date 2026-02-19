@@ -1,0 +1,25 @@
+{
+  "name": "ecoia-front",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "inferno": "^9.0.11",
+    "inferno-compat": "^9.0.11",
+    "inferno-create-element": "^9.0.11",
+    "inferno-router": "^9.0.11",
+    "inferno-vnode-flags": "^9.0.11"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "babel-plugin-inferno": "^6.8.5",
+    "tailwindcss": "^4.0.0",
+    "vite": "^6.0.0"
+  }
+}

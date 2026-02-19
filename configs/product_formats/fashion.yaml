@@ -1,0 +1,68 @@
+name: "Produit Mode"
+description: "Format pour les produits de mode et vêtements"
+
+fields:
+  name:
+    type: string
+    required: true
+    label: "Nom du produit"
+
+  description:
+    type: text
+    required: true
+    label: "Description détaillée"
+
+  price:
+    type: float
+    required: true
+    label: "Prix TTC"
+
+  category:
+    type: string
+    required: true
+    label: "Catégorie"
+
+  reference:
+    type: string
+    required: false
+    label: "Référence / SKU"
+
+  brand:
+    type: string
+    required: false
+    label: "Marque"
+
+  size:
+    type: string
+    required: false
+    label: "Taille"
+
+  color:
+    type: string
+    required: false
+    label: "Couleur"
+
+  material:
+    type: string
+    required: false
+    label: "Matière"
+
+  composition:
+    type: text
+    required: false
+    label: "Composition"
+
+  care_instructions:
+    type: text
+    required: false
+    label: "Instructions d'entretien"
+
+  images:
+    type: array
+    required: false
+    label: "URLs des images"
+
+  variants:
+    type: json
+    required: false
+    label: "Variantes (tailles/couleurs)"
