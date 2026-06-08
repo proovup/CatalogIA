@@ -108,6 +108,16 @@ export default class Formats extends Component {
               placeholder="Description lisible du champ"
             />
           </div>
+          <div class="md:col-span-12">
+            <label class="block text-xs font-medium text-violet-600 mb-1">Instruction IA</label>
+            <textarea
+              class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus-glow resize-y"
+              rows={2}
+              value={field.aiInstruction}
+              onInput={(e) => this.updateEditorField(scope, path, "aiInstruction", e.target.value)}
+              placeholder="Instruction pour l'IA lors de la génération de ce champ (ex: 'Génère un titre SEO optimisé < 70 caractères')"
+            />
+          </div>
           {!isObject && (
             <div class="md:col-span-8">
               <label class="block text-xs font-medium text-gray-500 mb-1">Valeur par défaut</label>
